@@ -482,9 +482,11 @@ TEST_F(FooDeathTest, DoesThat) {
 
 ### Regular Expression Syntax
 
-On POSIX systems (e.g. Linux, Cygwin, and Mac), googletest uses the
+When built with Bazel and using Abseil, googletest uses the
+[RE2](https://github.com/google/re2/wiki/Syntax) syntax. Otherwise, for POSIX
+systems (Linux, Cygwin, Mac), googletest uses the
 [POSIX extended regular expression](http://www.opengroup.org/onlinepubs/009695399/basedefs/xbd_chap09.html#tag_09_04)
-syntax. To learn about this syntax, you may want to read this
+syntax. To learn about POSIX syntax, you may want to read this
 [Wikipedia entry](http://en.wikipedia.org/wiki/Regular_expression#POSIX_Extended_Regular_Expressions).
 
 On Windows, googletest uses its own simple regular expression implementation. It
@@ -1140,8 +1142,8 @@ GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(FooTest);
 
 You can see [sample7_unittest.cc] and [sample8_unittest.cc] for more examples.
 
-[sample7_unittest.cc]: https://github.com/google/googletest/blob/master/googletest/samples/sample7_unittest.cc "Parameterized Test example"
-[sample8_unittest.cc]: https://github.com/google/googletest/blob/master/googletest/samples/sample8_unittest.cc "Parameterized Test example with multiple parameters"
+[sample7_unittest.cc]: https://github.com/google/googletest/blob/main/googletest/samples/sample7_unittest.cc "Parameterized Test example"
+[sample8_unittest.cc]: https://github.com/google/googletest/blob/main/googletest/samples/sample8_unittest.cc "Parameterized Test example with multiple parameters"
 
 ### Creating Value-Parameterized Abstract Tests
 
@@ -1292,7 +1294,7 @@ TYPED_TEST(FooTest, HasPropertyA) { ... }
 
 You can see [sample6_unittest.cc] for a complete example.
 
-[sample6_unittest.cc]: https://github.com/google/googletest/blob/master/googletest/samples/sample6_unittest.cc "Typed Test example"
+[sample6_unittest.cc]: https://github.com/google/googletest/blob/main/googletest/samples/sample6_unittest.cc "Typed Test example"
 
 ## Type-Parameterized Tests
 
@@ -1313,6 +1315,7 @@ First, define a fixture class template, as we did with typed tests:
 ```c++
 template <typename T>
 class FooTest : public testing::Test {
+  void DoSomethingInteresting();
   ...
 };
 ```
@@ -1330,6 +1333,9 @@ this as many times as you want:
 TYPED_TEST_P(FooTest, DoesBlah) {
   // Inside a test, refer to TypeParam to get the type parameter.
   TypeParam n = 0;
+
+  // You will need to use `this` explicitly to refer to fixture members.
+  this->DoSomethingInteresting()
   ...
 }
 
@@ -1727,7 +1733,7 @@ You can do so by adding one line:
 Now, sit back and enjoy a completely different output from your tests. For more
 details, see [sample9_unittest.cc].
 
-[sample9_unittest.cc]: https://github.com/google/googletest/blob/master/googletest/samples/sample9_unittest.cc "Event listener example"
+[sample9_unittest.cc]: https://github.com/google/googletest/blob/main/googletest/samples/sample9_unittest.cc "Event listener example"
 
 You may append more than one listener to the list. When an `On*Start()` or
 `OnTestPartResult()` event is fired, the listeners will receive it in the order
@@ -1754,7 +1760,7 @@ by the former.
 
 See [sample10_unittest.cc] for an example of a failure-raising listener.
 
-[sample10_unittest.cc]: https://github.com/google/googletest/blob/master/googletest/samples/sample10_unittest.cc "Failure-raising listener example"
+[sample10_unittest.cc]: https://github.com/google/googletest/blob/main/googletest/samples/sample10_unittest.cc "Failure-raising listener example"
 
 ## Running Test Programs: Advanced Options
 

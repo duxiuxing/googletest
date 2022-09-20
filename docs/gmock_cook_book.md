@@ -392,8 +392,7 @@ Old macros and their new equivalents:
 If a mock method has no `EXPECT_CALL` spec but is called, we say that it's an
 "uninteresting call", and the default action (which can be specified using
 `ON_CALL()`) of the method will be taken. Currently, an uninteresting call will
-also by default cause gMock to print a warning. (In the future, we might remove
-this warning by default.)
+also by default cause gMock to print a warning.
 
 However, sometimes you may want to ignore these uninteresting calls, and
 sometimes you may want to treat them as errors. gMock lets you make the decision
@@ -1425,11 +1424,12 @@ Use `Pair` when comparing maps or other associative containers.
 {% raw %}
 
 ```cpp
-using testing::ElementsAre;
-using testing::Pair;
+using ::testing::UnorderedElementsAre;
+using ::testing::Pair;
 ...
-  std::map<string, int> m = {{"a", 1}, {"b", 2}, {"c", 3}};
-  EXPECT_THAT(m, ElementsAre(Pair("a", 1), Pair("b", 2), Pair("c", 3)));
+  absl::flat_hash_map<string, int> m = {{"a", 1}, {"b", 2}, {"c", 3}};
+  EXPECT_THAT(m, UnorderedElementsAre(
+      Pair("a", 1), Pair("b", 2), Pair("c", 3)));
 ```
 
 {% endraw %}
@@ -1446,8 +1446,8 @@ using testing::Pair;
 *   If the container is passed by pointer instead of by reference, just write
     `Pointee(ElementsAre*(...))`.
 *   The order of elements *matters* for `ElementsAre*()`. If you are using it
-    with containers whose element order are undefined (e.g. `hash_map`) you
-    should use `WhenSorted` around `ElementsAre`.
+    with containers whose element order are undefined (such as a
+    `std::unordered_map`) you should use `UnorderedElementsAre`.
 
 ### Sharing Matchers
 
